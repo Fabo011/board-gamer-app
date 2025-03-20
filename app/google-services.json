@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "441034179331",
+    "project_id": "board-game-app-4d0db",
+    "storage_bucket": "board-game-app-4d0db.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:441034179331:android:ca62f01da0db9a32311f36",
+        "android_client_info": {
+          "package_name": "com.example.boardgamerapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaCl1ZvMqa-SOxaZsuaCi9qYfvoKEmLEg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
