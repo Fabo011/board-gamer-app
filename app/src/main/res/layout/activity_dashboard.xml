@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Headline TextView -->
+    <TextView
+        android:id="@+id/dashboard_headline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Dashboard"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:paddingBottom="16dp"
+        android:textColor="@android:color/black"/>
+
+    <!-- Body TextView with information -->
+    <TextView
+        android:id="@+id/dashboard_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Here is Activity Dashboard"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:textColor="@android:color/black"/>
+
+</LinearLayout>

@@ -19,6 +19,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
+        <TextView
+            android:id="@+id/form_headline"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create_or_join_a_group"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="16dp"
+            android:textColor="@android:color/black"/>
+
         <!-- Player Name Input -->
         <EditText
             android:id="@+id/etPlayerName"

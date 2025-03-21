@@ -10,4 +10,5 @@
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem.
     </string>
+    <string name="create_or_join_a_group">Create or join a group</string>
 </resources>
