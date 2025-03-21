@@ -9,6 +9,7 @@ import com.example.boardgamerapp.messaging.MessagingService;
 import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.Map;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivityLibrary {
 
@@ -74,35 +75,47 @@ public class MainActivityLibrary {
 
     // Check if the player exists in the group
     private void checkPlayerInGroup(Context context, String groupName, String playerName, String groupPassword, Runnable onSuccess) {
-        // Fetch the players from the group and check if the player already exists
+        // Fetch the group details and check if the player already exists
         database.fetchGroup(groupName, task -> {
             if (task.isSuccessful() && task.getResult().exists()) {
-                // Retrieve the list of players from the group
                 DocumentSnapshot groupDocument = task.getResult();
-                List<Map<String, Object>> players = (List<Map<String, Object>>) groupDocument.get("players");
+                Object playersObject = groupDocument.get("players");
 
-                // Check if the player is already in the players list
-                boolean playerExists = false;
-                for (Map<String, Object> player : players) {
-                    if (player.get("name").equals(playerName)) {
-                        playerExists = true;
-                        break;
+                if (playersObject instanceof List<?>) {
+                    List<?> playersList = (List<?>) playersObject;
+
+                    // Check if the list contains Map<String, Object> elements
+                    boolean playerExists = false;
+                    for (Object playerObj : playersList) {
+                        if (playerObj instanceof Map<?, ?>) {
+                            Map<?, ?> player = (Map<?, ?>) playerObj;
+                            // Check if the player name matches
+                            if (Objects.equals(player.get("name"), playerName)) {
+                                playerExists = true;
+                                break;
+                            }
+                        }
                     }
-                }
 
-                if (playerExists) {
-                    // Player exists, navigate to the Dashboard
-                    Log.d("DEBUG", "Player already exists in the group, navigating to Dashboard");
-                    onSuccess.run(); // Navigate to the dashboard
+                    if (playerExists) {
+                        // Player exists, navigate to the Dashboard
+                        Log.d("DEBUG", "Player already exists in the group, navigating to Dashboard");
+                        onSuccess.run(); // Navigate to the dashboard
+                    } else {
+                        // Player does not exist, proceed to add the player
+                        handleFCMToken(context, groupName, playerName, groupPassword, onSuccess, false);
+                    }
                 } else {
-                    // Player does not exist, proceed to add the player
-                    handleFCMToken(context, groupName, playerName, groupPassword, onSuccess, false);
+                    // Handle the case where "players" is not a List, which should not happen in normal cases
+                    Log.e("DEBUG", "Error: 'players' field is not a List as expected");
+                    Toast.makeText(context, "Unexpected error in players data", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 Toast.makeText(context, "Error fetching group data", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
 
     // Handle FCM token retrieval and subsequent actions
     private void handleFCMToken(Context context, String groupName, String playerName, String groupPassword, Runnable onSuccess, boolean isCreatingGroup) {
