@@ -32,6 +32,15 @@
         android:radius="8dp"
         android:gravity="center"/>
 
+    <!-- Create Event Button -->
+    <Button
+        android:id="@+id/create_event_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Event"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true" />
+
 </LinearLayout>
 
 

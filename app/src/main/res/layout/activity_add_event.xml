@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
+    android:layout_gravity="center">
+
+    <!-- Location input -->
+    <EditText
+        android:id="@+id/editTextLocation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Location"
+        android:inputType="text"
+        android:layout_marginTop="16dp"
+        android:gravity="center" />
+
+    <!-- Date and Time picker -->
+    <EditText
+        android:id="@+id/editTextDateTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Select Date and Time"
+        android:focusable="false"
+        android:clickable="true"
+        android:inputType="none"
+        android:layout_marginTop="16dp"
+        android:gravity="center" />
+
+    <!-- Section to add games dynamically -->
+    <LinearLayout
+        android:id="@+id/gamesLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp"
+        android:gravity="center" />
+
+    <!-- Button to add more games -->
+    <Button
+        android:id="@+id/btnAddGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Game"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"/>
+
+    <!-- Button to create the event -->
+    <Button
+        android:id="@+id/btnCreateEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Event"
+        android:layout_marginTop="16dp"
+        android:layout_gravity="center"/>
+
+</LinearLayout>
+

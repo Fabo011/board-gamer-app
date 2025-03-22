@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
             boolean isCreatingGroup = toggleSwitch.isChecked();
 
             // Save group name to Store (SharedPreferences)
-            store.saveGroupName(groupName);
+            store.saveGroupName(groupName, playerName);
 
             // Pass the player and group info to the library
             library.handleFormSubmission(this, playerName, groupName, groupPassword, isCreatingGroup, this::navigateToDashboard);
