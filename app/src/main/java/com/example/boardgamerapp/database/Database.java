@@ -100,6 +100,17 @@ public class Database {
                 .addOnSuccessListener(aVoid -> Log.d(TAG, "Next host index updated"))
                 .addOnFailureListener(e -> Log.e(TAG, "Error updating next host index", e));
     }
+
+    /**
+     * 6. Update game_votes votes
+     */
+    public void updateEventGameVotes(String groupName, String eventId, List<Map<String, Object>> updatedEvents, Runnable onSuccess) {
+        db.collection(COLLECTION_NAME)
+                .document(groupName)
+                .update("events", updatedEvents)
+                .addOnSuccessListener(aVoid -> onSuccess.run());
+    }
+
 }
 
 
