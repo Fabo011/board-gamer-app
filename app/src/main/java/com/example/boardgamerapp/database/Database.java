@@ -46,16 +46,6 @@ public class Database {
                 .addOnCompleteListener(onCompleteListener);
     }
 
-    public void fetchPlayerInGroup(String groupName, String playerName, OnCompleteListener<DocumentSnapshot> listener) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("groups")
-                .document(groupName)
-                .collection("players")
-                .document(playerName)
-                .get()
-                .addOnCompleteListener(listener);
-    }
-
     /**
      * 3. Add player to group
      */
@@ -99,5 +89,17 @@ public class Database {
             }
         }).addOnFailureListener(e -> Log.e(TAG, "Error fetching group", e));
     }
+
+    /**
+     * 5. Update the next_host_index of the group
+     */
+    public void updateNextHostIndex(String groupName, long newNextHostIndex) {
+        DocumentReference groupRef = db.collection(COLLECTION_NAME).document(groupName);
+
+        groupRef.update("next_host_index", newNextHostIndex)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Next host index updated"))
+                .addOnFailureListener(e -> Log.e(TAG, "Error updating next host index", e));
+    }
 }
+
 

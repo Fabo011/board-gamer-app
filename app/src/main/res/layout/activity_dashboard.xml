@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:layout_marginTop="24dp">
 
     <!-- Headline TextView -->
     <TextView
@@ -12,19 +13,34 @@
         android:layout_height="wrap_content"
         android:text="Dashboard"
         android:textSize="24sp"
-        android:textStyle="bold"
+        android:textStyle="normal"
         android:gravity="center"
-        android:paddingBottom="16dp"
-        android:textColor="@android:color/black"/>
+       android:paddingBottom="16dp"
+       android:textColor="@android:color/black"/>
 
-    <!-- Body TextView with information -->
+    <!-- Notice TextView (Next Host Message) -->
     <TextView
-        android:id="@+id/dashboard_text"
+        android:id="@+id/notice_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Here is Activity Dashboard"
-        android:textSize="18sp"
-        android:gravity="center"
-        android:textColor="@android:color/black"/>
+        android:text="Loading next host..."
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+        android:background="@color/cardview_shadow_start_color"
+        android:padding="12dp"
+        android:layout_marginTop="20dp"
+        android:radius="8dp"
+        android:gravity="center"/>
+
+    <!-- Create Event Button -->
+    <Button
+        android:id="@+id/create_event_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create Event"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true" />
 
 </LinearLayout>
+
+

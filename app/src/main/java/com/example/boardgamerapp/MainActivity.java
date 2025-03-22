@@ -9,6 +9,7 @@ import android.widget.Switch;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.boardgamerapp.library.MainActivityLibrary;
+import com.example.boardgamerapp.store.Store;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,14 +18,16 @@ public class MainActivity extends AppCompatActivity {
     private Button btnSubmit;
 
     private MainActivityLibrary library;
+    private Store store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize library
+        // Initialize library and Store
         library = new MainActivityLibrary();
+        store = new Store(this); // Pass context to Store
 
         // Initialize UI elements
         etPlayerName = findViewById(R.id.etPlayerName);
@@ -40,6 +43,10 @@ public class MainActivity extends AppCompatActivity {
             String groupPassword = etGroupPassword.getText().toString().trim();
             boolean isCreatingGroup = toggleSwitch.isChecked();
 
+            // Save group name to Store (SharedPreferences)
+            store.saveGroupName(groupName, playerName);
+
+            // Pass the player and group info to the library
             library.handleFormSubmission(this, playerName, groupName, groupPassword, isCreatingGroup, this::navigateToDashboard);
         });
     }
@@ -49,4 +56,3 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 }
-
