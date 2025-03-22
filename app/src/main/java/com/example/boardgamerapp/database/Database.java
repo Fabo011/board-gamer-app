@@ -46,16 +46,6 @@ public class Database {
                 .addOnCompleteListener(onCompleteListener);
     }
 
-    public void fetchPlayerInGroup(String groupName, String playerName, OnCompleteListener<DocumentSnapshot> listener) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("groups")
-                .document(groupName)
-                .collection("players")
-                .document(playerName)
-                .get()
-                .addOnCompleteListener(listener);
-    }
-
     /**
      * 3. Add player to group
      */
