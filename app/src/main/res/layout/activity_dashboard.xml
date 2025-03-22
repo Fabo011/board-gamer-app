@@ -26,8 +26,10 @@
         android:text="Loading next host..."
         android:textSize="16sp"
         android:textColor="@android:color/black"
+        android:background="@color/cardview_shadow_start_color"
         android:padding="12dp"
         android:layout_marginTop="20dp"
+        android:radius="8dp"
         android:gravity="center"/>
 
 </LinearLayout>

@@ -3,28 +3,37 @@ package com.example.boardgamerapp;
 import android.os.Bundle;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.boardgamerapp.library.UserStory2RotateHost;
+import com.example.boardgamerapp.store.Store;
 
 public class DashboardActivity extends AppCompatActivity {
 
     private TextView headline;
     private TextView nextHost;
     private UserStory2RotateHost userStory2RotateHost;
+    private Store store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+        // Initialize UI elements
         headline = findViewById(R.id.dashboard_headline);
         nextHost = findViewById(R.id.notice_text);
         headline.setText("Dashboard");
 
+        // Initialize Store to retrieve group name from SharedPreferences
+        store = new Store(this);
+
+        // Retrieve the group name from Store (SharedPreferences)
+        String groupName = store.getGroupName();
+
         // Initialize UserStory2RotateHost
         userStory2RotateHost = new UserStory2RotateHost();
 
-        // Fetch the next host's name
-        String groupName = "FridayGamer";  // Replace with actual group name
+        // Fetch the next host's name dynamically using the group name
         userStory2RotateHost.fetchNextHost(groupName, new UserStory2RotateHost.OnNextHostFetched() {
             @Override
             public void onNextHostFetched(String playerName) {
