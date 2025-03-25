@@ -22,7 +22,7 @@ import java.net.URL;
 public class MessagingService extends Service {
 
     private static final String TAG = "MessagingService";
-    private static final String SERVER_KEY = "75ceaafed6efe92a9e8d15a0100924303e9c0624"; // Replace with Firebase Server Key
+    private static final String SERVER_KEY = "<token>"; // Replace with Firebase Server Key
     private static final String FCM_URL = "https://fcm.googleapis.com/v1/projects/board-game-app-4d0db/messages:send";
 
     // Hardcoded FCM Token (replace this with a real user's token)
