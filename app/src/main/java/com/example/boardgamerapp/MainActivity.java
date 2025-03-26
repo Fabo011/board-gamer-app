@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.TextView;
+
 
 import androidx.appcompat.app.AppCompatActivity;
+
 
 import com.example.boardgamerapp.library.MainActivityLibrary;
 import com.example.boardgamerapp.store.Store;
@@ -19,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     private MainActivityLibrary library;
     private Store store;
+
+    private TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
         etGroupPassword = findViewById(R.id.etGroupPassword);
         toggleSwitch = findViewById(R.id.toggleSwitch);
         btnSubmit = findViewById(R.id.btnSubmit);
+
 
         // Handle form submission
         btnSubmit.setOnClickListener(view -> {
