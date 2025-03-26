@@ -2,6 +2,7 @@ package com.example.boardgamerapp.database;
 
 import android.util.Log;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.*;
 
 import java.util.HashMap;
@@ -109,6 +110,40 @@ public class Database {
                 .document(groupName)
                 .update("events", updatedEvents)
                 .addOnSuccessListener(aVoid -> onSuccess.run());
+    }
+
+    public void getCurrentMatchday(String groupName, final FirestoreCallback callback) {
+
+        DocumentReference docRef = db.collection(COLLECTION_NAME).document(groupName);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(Task<DocumentSnapshot> task) {
+                Log.i(TAG, "onComplete: ");
+                if (task.isSuccessful()) {
+                    Log.i(TAG, "onComplete: " + "task success");
+                    DocumentSnapshot document = task.getResult();
+                    Log.i(TAG, "onComplete: " + "task success " + document.getId());
+                    if (document.exists()) {
+                        Log.i(TAG, "onComplete: " + "dokument exist");
+                        Long nextHostIndex = document.getLong("next_host_index"); // Holt den nächsten Spieler
+                        //Map<String, String> events = (Map<String, String>) document.get("events"); // Holt alle Events
+                        //Map<String, String> players = (Map<String, String>) document.get("players"); // Holt alle Spieler
+                        Log.i(TAG, "onComplete: " + nextHostIndex);
+                        callback.onSuccess(nextHostIndex);
+                    } else {
+                        callback.onFailure("Dokument nicht gefunden!");
+                        Log.i(TAG, "onComplete: " + "Dokument nicht gefunden");
+                    }
+                } else {
+                    callback.onFailure("Fehler beim Abrufen des Dokuments: " + task.getException());
+                }
+            }
+        });
+    }
+    // Interface für den Callback
+    public interface FirestoreCallback {
+        void onSuccess(Long nextHostIndex);
+        void onFailure(String errorMessage);
     }
 
 }
