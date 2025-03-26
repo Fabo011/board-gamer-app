@@ -36,32 +36,37 @@ public class UserStory1NextMatchDay {
                     if (document.exists()) {
                         Log.i(TAG, "onComplete: document exists");
 
-                        // Get the list of events
                         List<Map<String, String>> events = (List<Map<String, String>>) document.get("events");
 
-                        // Check if the events list is not empty
                         if (events == null || events.isEmpty()) {
                             callback.onFailure("No events found.");
                             return;
                         }
 
-                        // Initialize a variable to track the next event
+                        Map<String, String> closestEvent = null;
                         Map<String, String> nextEvent = null;
-                        Date currentDate = new Date();  // Get the current date
+                        Date currentDate = new Date();
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+                        long oneDayInMillis = 24 * 60 * 60 * 1000; // 1 day in milliseconds
 
-                        // Loop through the events to find the closest future matchday
                         for (Map<String, String> event : events) {
                             String matchdayString = event.get("date");
                             if (matchdayString != null) {
                                 try {
-                                    // Convert the matchday string to a Date object
-                                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
                                     Date matchdayDate = dateFormat.parse(matchdayString);
+                                    if (matchdayDate != null) {
+                                        Date matchdayEndTime = new Date(matchdayDate.getTime() + oneDayInMillis); // Add 1 day
 
-                                    // Check if this event is in the future and closer than the previously found one
-                                    if (matchdayDate != null && matchdayDate.after(currentDate)) {
-                                        if (nextEvent == null || matchdayDate.before(dateFormat.parse(nextEvent.get("date")))) {
-                                            nextEvent = event;
+                                        if (matchdayEndTime.after(currentDate)) {
+                                            if (closestEvent == null || matchdayDate.before(dateFormat.parse(closestEvent.get("date")))) {
+                                                closestEvent = event;
+                                            }
+                                        }
+
+                                        if (matchdayDate.after(currentDate)) {
+                                            if (nextEvent == null || matchdayDate.before(dateFormat.parse(nextEvent.get("date")))) {
+                                                nextEvent = event;
+                                            }
                                         }
                                     }
                                 } catch (ParseException e) {
@@ -70,16 +75,13 @@ public class UserStory1NextMatchDay {
                             }
                         }
 
-                        // If a future event was found, return it
-                        if (nextEvent != null) {
-                            String host = nextEvent.get("host");
-                            String matchday = nextEvent.get("date");
-                            Log.i(TAG, "onComplete: Host=" + host + ", Matchday=" + matchday);
-                            callback.onSuccess(host, matchday);
+                        if (closestEvent != null) {
+                            callback.onSuccess(closestEvent.get("host"), closestEvent.get("date"));
+                        } else if (nextEvent != null) {
+                            callback.onSuccess(nextEvent.get("host"), nextEvent.get("date"));
                         } else {
-                            callback.onFailure("No future events found.");
+                            callback.onFailure("No upcoming events found.");
                         }
-
                     } else {
                         callback.onFailure("Document not found.");
                         Log.i(TAG, "onComplete: Document not found");
