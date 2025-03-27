@@ -1,34 +1,26 @@
 package com.example.boardgamerapp.messaging;
 
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.os.Build;
 import android.util.Log;
+import com.example.boardgamerapp.R;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.core.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.FirebaseMessagingService;
+import com.google.firebase.messaging.RemoteMessage;
 
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-// https://www.youtube.com/watch?v=oNoRw69ro2k
-// https://firebase.google.com/docs/cloud-messaging/android/client
-public class MessagingService extends Service {
+public class MessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MessagingService";
-    private static final String SERVER_KEY = "<token>"; // Replace with Firebase Server Key
-    private static final String FCM_URL = "https://fcm.googleapis.com/v1/projects/board-game-app-4d0db/messages:send";
+    private static final String CHANNEL_ID = "fcm_default_channel";
 
-    // Hardcoded FCM Token (replace this with a real user's token)
-    private static final String HARD_CODED_FCM_TOKEN = "f7IvfqktTbeJ5QVpfQD7oF:APA91bEjFfZ9ENtQxmEXBfq8DDyuvNCUiCgk9kuV5Dwvevdc_XJf2tcnVBjaOZkz25qMiI_oF3k8l9F7kYRBY5g-YUlWvrYNmLm-NxVMAaYeYG03Nq3xolo";
-
-    // Method to get the current FCM token
+    // Called when a new token is generated or refreshed.
     public void getFCMToken(OnTokenReceivedListener listener) {
         FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -42,45 +34,74 @@ public class MessagingService extends Service {
         });
     }
 
-    // Method to send a notification to a specific user
-    public void sendNotification(String message) {
-        FirebaseMessaging.getInstance().setAutoInitEnabled(true);
-        new Thread(() -> {
-            try {
-                URL url = new URL(FCM_URL);
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Authorization", "Bearer " + SERVER_KEY);
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setDoOutput(true);
+    // Handle incoming FCM messages
+    @Override
+    public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
+        Log.d(TAG, "From: " + remoteMessage.getFrom());
 
-                JSONObject notification = new JSONObject();
-                notification.put("title", "New Message");
-                notification.put("body", message);
+        // Check if the message contains a data payload
+        if (remoteMessage.getData().size() > 0) {
+            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            handleNow();
+        }
 
-                JSONObject json = new JSONObject();
-                json.put("to", HARD_CODED_FCM_TOKEN);
-                json.put("notification", notification);
-
-                OutputStream os = conn.getOutputStream();
-                os.write(json.toString().getBytes("UTF-8"));
-                os.close();
-
-                int responseCode = conn.getResponseCode();
-                Log.d(TAG, "FCM Response Code: " + responseCode);
-
-                Log.d(TAG, "FCM Response: " + new BufferedReader(new InputStreamReader(conn.getInputStream())).lines().reduce("", (a, b) -> a + b));
-
-            } catch (Exception e) {
-                Log.e(TAG, "Error sending FCM notification", e);
-            }
-        }).start();
+        // Check if the message contains a notification payload
+        if (remoteMessage.getNotification() != null) {
+            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
+            // Handle notification payload
+            sendNotification(remoteMessage.getNotification().getBody());
+        }
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    // Handle short-running tasks (i.e., within 10 seconds)
+    private void handleNow() {
+        Log.d(TAG, "Handling message in foreground.");
+        // Implement your immediate handling logic here
+    }
+
+    // Display a notification to the user
+    public void sendNotification(String messageBody) {
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        // Create notification channel for Android 8.0+ (Oreo and higher)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "FCM Channel";
+            String description = "Channel for FCM notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            notificationManager.createNotificationChannel(channel);
+        }
+
+        // Create a notification with your custom icon
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("New FCM Message")
+                .setContentText(messageBody)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setSmallIcon(R.drawable.notification) // Use the custom icon here
+                .build();
+
+        // Display the notification
+        notificationManager.notify(0, notification);
+    }
+
+    // Subscribe to a topic
+    public void subscribeToTopic(String topic) {
+        FirebaseMessaging.getInstance().subscribeToTopic(topic)
+                .addOnCompleteListener(task -> {
+                    String msg = task.isSuccessful() ? "Subscribed to topic: " + topic : "Failed to subscribe to topic: " + topic;
+                    Log.d(TAG, msg);
+                });
+    }
+
+    // Unsubscribe from a topic
+    public void unsubscribeFromTopic(String topic) {
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(topic)
+                .addOnCompleteListener(task -> {
+                    String msg = task.isSuccessful() ? "Unsubscribed from topic: " + topic : "Failed to unsubscribe from topic: " + topic;
+                    Log.d(TAG, msg);
+                });
     }
 
     // Interface to listen to token retrieval results
@@ -89,3 +110,4 @@ public class MessagingService extends Service {
         void onError(String error);
     }
 }
+
