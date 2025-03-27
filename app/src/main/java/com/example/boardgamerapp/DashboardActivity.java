@@ -2,44 +2,88 @@ package com.example.boardgamerapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.boardgamerapp.library.UserStory1NextMatchDay;
 import com.example.boardgamerapp.library.UserStory2RotateHost;
+import com.example.boardgamerapp.library.UserStory4PreVoting;
 import com.example.boardgamerapp.store.Store;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.List;
+import java.util.Map;
+
 public class DashboardActivity extends AppCompatActivity {
+
+    private static final String TAG = "DashboardActivity";
 
     private TextView headline;
     private TextView nextHost;
     private Button createEventButton;
     private Button messagingButton;
-    private UserStory2RotateHost userStory2RotateHost;
     private Store store;
     private UserStory1NextMatchDay matchDay;
+    private UserStory4PreVoting preVoting;
 
     private ImageView cardImage;
     private TextView cardTitle;
     private TextView cardDescription;
-    private Button voteButton;
+    private LinearLayout voteContainer;
+
+    private String currentEventId; // Store current event ID
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
-        initializeUI(); // Initialize UI and fetch data
+        store = new Store(this);
+        initializeUI();
+
+        String groupName = store.getGroupName();
+        if (groupName == null || groupName.isEmpty()) {
+            Log.e(TAG, "Group name is null or empty!");
+            return;
+        }
+
+        matchDay = new UserStory1NextMatchDay(this);
+
+        matchDay.getCurrentMatchday(groupName, new UserStory1NextMatchDay.getCurrentMatchdayCallback() {
+            @Override
+            public void onSuccess(String host, String matchday, String eventId, List<Map<String, Object>> gameVotes) {
+                cardTitle.setText("Next Game Night: " + matchday);
+                cardDescription.setText("Host: " + host);
+
+                voteContainer.removeAllViews(); // Clear old buttons
+                for (Map<String, Object> game : gameVotes) {
+                    String gameName = (String) game.get("game");
+                    int votes = ((Long) game.get("votes")).intValue(); // Convert Long to int
+
+                    Button gameButton = new Button(DashboardActivity.this);
+                    gameButton.setText(gameName + " (" + votes + " votes)");
+                    gameButton.setOnClickListener(v -> voteForGame(eventId, gameName));
+
+                    voteContainer.addView(gameButton);
+                }
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                cardTitle.setText(errorMessage);
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         initializeUI(); // Refresh UI when activity resumes
     }
 
@@ -52,7 +96,7 @@ public class DashboardActivity extends AppCompatActivity {
         cardImage = findViewById(R.id.card_image);
         cardTitle = findViewById(R.id.card_title);
         cardDescription = findViewById(R.id.card_description);
-        voteButton = findViewById(R.id.voteButton);
+        voteContainer = findViewById(R.id.vote_container); // LinearLayout to hold vote buttons
 
         headline.setText("Dashboard");
 
@@ -61,32 +105,31 @@ public class DashboardActivity extends AppCompatActivity {
         String groupName = store.getGroupName();
 
         // Initialize UserStory instances
-        userStory2RotateHost = new UserStory2RotateHost();
-        matchDay = new UserStory1NextMatchDay();
+        matchDay = new UserStory1NextMatchDay(this);
+        preVoting = new UserStory4PreVoting(this);
 
-        // Fetch match day details
+        // Fetch match day details & game voting
         matchDay.getCurrentMatchday(groupName, new UserStory1NextMatchDay.getCurrentMatchdayCallback() {
             @Override
-            public void onSuccess(String player, String matchday) {
+            public void onSuccess(String player, String matchday, String eventId, List<Map<String, Object>> gameVotes) {
                 cardImage.setImageResource(R.drawable.gamenight);
                 cardTitle.setText("Der Nächste Spieleabend ist am: " + matchday);
                 cardDescription.setText("Dein Gastgeber ist " + player);
+
+                currentEventId = eventId; // Save the event ID
+
+                displayGameVoteButtons(gameVotes, eventId);
             }
 
             @Override
             public void onFailure(String errorMessage) {
                 cardTitle.setText(errorMessage);
+                voteContainer.removeAllViews(); // Clear buttons if no event found
             }
         });
 
-        // Set vote button action
-        voteButton.setOnClickListener(v -> {
-            Snackbar snackbar = Snackbar.make(v, "Hier die Funktion für die Votes einfügen", Snackbar.LENGTH_LONG);
-            snackbar.show();
-        });
-
         // Fetch next host
-        userStory2RotateHost.fetchNextHost(groupName, new UserStory2RotateHost.OnNextHostFetched() {
+        new UserStory2RotateHost().fetchNextHost(groupName, new UserStory2RotateHost.OnNextHostFetched() {
             @Override
             public void onNextHostFetched(String playerName) {
                 if (playerName != null) {
@@ -98,14 +141,37 @@ public class DashboardActivity extends AppCompatActivity {
         });
 
         // Set up button click listeners
-        createEventButton.setOnClickListener(v -> {
-            Intent intent = new Intent(DashboardActivity.this, AddEventActivity.class);
-            startActivity(intent);
-        });
+        createEventButton.setOnClickListener(v -> startActivity(new Intent(DashboardActivity.this, AddEventActivity.class)));
+        messagingButton.setOnClickListener(v -> startActivity(new Intent(DashboardActivity.this, MessagingActivity.class)));
+    }
 
-        messagingButton.setOnClickListener(v -> {
-            Intent intent = new Intent(DashboardActivity.this, MessagingActivity.class);
-            startActivity(intent);
-        });
+    private void displayGameVoteButtons(List<Map<String, Object>> gameVotes, String eventId) {
+        voteContainer.removeAllViews(); // Clear previous buttons
+
+        if (gameVotes == null || gameVotes.isEmpty()) {
+            Toast.makeText(this, "No games found for voting!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        for (Map<String, Object> game : gameVotes) {
+            String gameName = (String) game.get("game");
+            long votes = (long) game.get("votes");
+
+            Button gameButton = new Button(this);
+            gameButton.setText(gameName + " (" + votes + " votes)");
+            gameButton.setOnClickListener(v -> voteForGame(eventId, gameName));
+
+            voteContainer.addView(gameButton);
+        }
+    }
+
+    private void voteForGame(String eventId, String gameName) {
+        if (eventId == null || eventId.isEmpty()) {
+            Toast.makeText(this, "Event ID is missing!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        preVoting.voteForGame(eventId, gameName);
+        Snackbar.make(voteContainer, "Vote submitted for " + gameName, Snackbar.LENGTH_LONG).show();
     }
 }

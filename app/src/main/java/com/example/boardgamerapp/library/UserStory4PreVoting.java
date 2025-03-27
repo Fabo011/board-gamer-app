@@ -79,4 +79,3 @@ public class UserStory4PreVoting {
         Log.e(TAG, "Game not found in game_votes for event: " + eventId);
     }
 }
-

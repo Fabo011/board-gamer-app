@@ -29,7 +29,6 @@
         android:background="@color/cardview_shadow_start_color"
         android:padding="12dp"
         android:layout_marginTop="20dp"
-        android:radius="8dp"
         android:gravity="center"/>
 
     <!-- Buttons Row -->
@@ -63,9 +62,8 @@
             android:textAllCaps="false"/>
     </LinearLayout>
 
-
+    <!-- CardView for the match details and vote buttons -->
     <androidx.cardview.widget.CardView
-
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -80,13 +78,14 @@
             android:orientation="vertical"
             android:gravity="center">
 
+            <!-- Game Night Image -->
             <ImageView
                 android:id="@+id/card_image"
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:scaleType="centerCrop"
-                />
+                android:scaleType="centerCrop"/>
 
+            <!-- Game Night Title -->
             <TextView
                 android:id="@+id/card_title"
                 android:layout_width="match_parent"
@@ -96,6 +95,7 @@
                 android:textStyle="bold"
                 android:textColor="#FFFFFF"/>
 
+            <!-- Game Night Description -->
             <TextView
                 android:id="@+id/card_description"
                 android:layout_width="match_parent"
@@ -104,23 +104,22 @@
                 android:paddingEnd="16dp"
                 android:paddingBottom="16dp"
                 android:textSize="16sp"
-                android:textColor="#FFFFFF"
-                 />
+                android:textColor="#FFFFFF"/>
 
-            <Button
-                android:id="@+id/voteButton"
-                android:layout_width="200dp"
-                android:layout_height="60dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="16dp"
-                android:text="Votes"
-                android:backgroundTint="#10002F">
-            </Button>
+            <!-- LinearLayout for dynamically created vote buttons (inside the card) -->
+            <LinearLayout
+                android:id="@+id/vote_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:paddingBottom="20dp"/>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <!-- Bottom Navigation View -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/bottom_navigation"
@@ -128,7 +127,5 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:menu="@menu/bottom_navigation_menu"
-        app:itemBackground="@color/primaryColor"
-        />
-
+        app:itemBackground="@color/primaryColor"/>
 </LinearLayout>
