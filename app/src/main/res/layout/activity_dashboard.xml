@@ -114,7 +114,25 @@
                 android:orientation="vertical"
                 android:gravity="center"
                 android:paddingTop="20dp"
-                android:paddingBottom="20dp"/>
+                android:paddingBottom="20dp">
+
+                <!-- Example of a vote button inside the card -->
+                <Button
+                    android:id="@+id/vote_button_example"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Game Name (Votes)"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:padding="12dp"
+                    android:backgroundTint="#6A4C93"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_gravity="center"
+                    android:radius="12dp" />
+
+            </LinearLayout>
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
