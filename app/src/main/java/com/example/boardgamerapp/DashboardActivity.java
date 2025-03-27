@@ -68,7 +68,7 @@ public class DashboardActivity extends AppCompatActivity {
 
                     Button gameButton = new Button(DashboardActivity.this);
                     gameButton.setText(gameName + " (" + votes + " votes)");
-                    gameButton.setOnClickListener(v -> voteForGame(eventId, gameName));
+                    gameButton.setOnClickListener(v -> voteForGame(eventId, gameName, gameButton));
 
                     voteContainer.addView(gameButton);
                 }
@@ -159,19 +159,33 @@ public class DashboardActivity extends AppCompatActivity {
 
             Button gameButton = new Button(this);
             gameButton.setText(gameName + " (" + votes + " votes)");
-            gameButton.setOnClickListener(v -> voteForGame(eventId, gameName));
+
+            // Pass the button reference to the voteForGame method
+            gameButton.setOnClickListener(v -> voteForGame(eventId, gameName, gameButton));
 
             voteContainer.addView(gameButton);
         }
     }
 
-    private void voteForGame(String eventId, String gameName) {
+
+    private void voteForGame(String eventId, String gameName, Button gameButton) {
         if (eventId == null || eventId.isEmpty()) {
             Toast.makeText(this, "Event ID is missing!", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Get current votes and increment by 1
+        String buttonText = gameButton.getText().toString();
+        int currentVotes = Integer.parseInt(buttonText.substring(buttonText.indexOf('(') + 1, buttonText.indexOf(" votes")));
+        int updatedVotes = currentVotes + 1;
+
+        // Immediately update the button text to show new vote count
+        gameButton.setText(gameName + " (" + updatedVotes + " votes)");
+
+        // Call the backend to save the vote
         preVoting.voteForGame(eventId, gameName);
+
         Snackbar.make(voteContainer, "Vote submitted for " + gameName, Snackbar.LENGTH_LONG).show();
     }
+
 }
