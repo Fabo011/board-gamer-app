@@ -140,6 +140,14 @@ public class Database {
             }
         });
     }
+
+    public void getGroupDocument(String groupName, OnCompleteListener<DocumentSnapshot> onCompleteListener) {
+        db.collection(COLLECTION_NAME)
+                .document(groupName)
+                .get()
+                .addOnCompleteListener(onCompleteListener);
+    }
+
     // Interface für den Callback
     public interface FirestoreCallback {
         void onSuccess(Long nextHostIndex);
@@ -147,5 +155,3 @@ public class Database {
     }
 
 }
-
-
