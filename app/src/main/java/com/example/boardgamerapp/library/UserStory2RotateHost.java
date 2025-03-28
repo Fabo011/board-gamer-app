@@ -18,9 +18,9 @@ public class UserStory2RotateHost {
 
     // Constructor accepts Context to initialize Store and MessagingService
     public UserStory2RotateHost(Context context) {
-        database = new Database();  // Initialize the database class
-        messagingService = new MessagingService();  // Initialize the messaging service
-        store = new Store(context); // Initialize Store with the provided context
+        database = new Database();
+        messagingService = new MessagingService();
+        store = new Store(context);
     }
 
     public void createEventAndUpdateHost(Context context, String groupName, String eventId, String location, String date, String hostName, List<Map<String, Object>> gameVotes) {
@@ -62,8 +62,6 @@ public class UserStory2RotateHost {
                         newHost + " is the next host. " + newHost + " please create the next event.",
                         true
                 );
-
-                // Update the next_host_index in the database
                 database.updateNextHostIndex(groupName, newNextHostIndex);
             }
         });

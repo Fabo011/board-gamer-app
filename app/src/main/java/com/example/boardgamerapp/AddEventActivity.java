@@ -109,7 +109,7 @@ public class AddEventActivity extends AppCompatActivity {
             }
 
             String groupName = store.getGroupName();
-            String hostName = store.getPlayerName(); // Assuming this method returns the player name
+            String hostName = store.getPlayerName();
 
             // Generate a unique event ID
             String eventId = "evt" + System.currentTimeMillis();

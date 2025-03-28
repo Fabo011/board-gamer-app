@@ -29,7 +29,7 @@ public class MessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MessagingService";
     private static final String CHANNEL_ID = "fcm_default_channel";
-    private static final String PROJECT_ID = "board-game-app-4d0db"; // Replace with Firebase Project ID
+    private static final String PROJECT_ID = "board-game-app-4d0db";
 
     // Called when a new token is generated or refreshed.
     public void getFCMToken(OnTokenReceivedListener listener) {
@@ -75,7 +75,7 @@ public class MessagingService extends FirebaseMessagingService {
         }
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("New FCM Message")
+                .setContentTitle("Neue Nachricht")
                 .setContentText(messageBody)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setSmallIcon(R.drawable.notification)
@@ -169,4 +169,3 @@ public class MessagingService extends FirebaseMessagingService {
         void onError(String error);
     }
 }
-

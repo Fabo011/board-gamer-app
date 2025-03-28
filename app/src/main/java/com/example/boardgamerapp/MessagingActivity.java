@@ -28,22 +28,19 @@ public class MessagingActivity extends AppCompatActivity {
         messagingService = new MessagingService();
         store = new Store(this);
         String groupName = store.getGroupName();
+        String playerName = store.getPlayerName();
 
         sendButton.setOnClickListener(v -> {
-            String message = messageInput.getText().toString().trim();
-            if (!message.isEmpty()) {
-                // Send the message to the group's topic
-                messagingService.sendFCMMessage(MessagingActivity.this, groupName, message, true);
-                Toast.makeText(MessagingActivity.this, "Message sent to " + groupName, Toast.LENGTH_SHORT).show();
+            String message = playerName + ": " + messageInput.getText().toString().trim();
+            // Send the message to the group's topic
+            messagingService.sendFCMMessage(MessagingActivity.this, groupName, message, true);
+            Toast.makeText(MessagingActivity.this, "Message sent to " + groupName, Toast.LENGTH_SHORT).show();
 
-                // Navigate back to DashboardActivity after sending the message
-                Intent intent = new Intent(MessagingActivity.this, DashboardActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
-                finish();
-            } else {
-                Toast.makeText(MessagingActivity.this, "Please enter a message", Toast.LENGTH_SHORT).show();
-            }
+            // Navigate back to DashboardActivity after sending the message
+            Intent intent = new Intent(MessagingActivity.this, DashboardActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
         });
     }
 }
