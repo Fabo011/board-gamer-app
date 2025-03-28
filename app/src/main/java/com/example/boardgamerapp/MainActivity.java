@@ -35,10 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Subscribe to the group topic using the group name stored in the Store
         String groupName = store.getGroupName();
-        if (groupName != null && !groupName.isEmpty()) {
-            messagingService.subscribeToTopic(groupName);
-            Log.d("MessagingService", "Subscribed to group topic: " + groupName);
-        }
 
         // Initialize UI elements
         etPlayerName = findViewById(R.id.etPlayerName);
@@ -56,6 +52,11 @@ public class MainActivity extends AppCompatActivity {
 
             // Save group name to Store (SharedPreferences)
             store.saveGroupName(groupNameInput, playerName);
+
+            if (groupName != null && !groupName.isEmpty()) {
+                messagingService.subscribeToTopic(groupName);
+                Log.d("MessagingService", "Subscribed to group topic: " + groupName);
+            }
 
             // Pass the player and group info to the library
             library.handleFormSubmission(this, playerName, groupNameInput, groupPassword, isCreatingGroup, this::navigateToDashboard);

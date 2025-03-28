@@ -88,9 +88,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void initializeUI() {
-        // Initialize UI elements
         headline = findViewById(R.id.dashboard_headline);
-        nextHost = findViewById(R.id.notice_text);
         createEventButton = findViewById(R.id.create_event_button);
         messagingButton = findViewById(R.id.messaging_button);
         cardImage = findViewById(R.id.card_image);
@@ -128,17 +126,8 @@ public class DashboardActivity extends AppCompatActivity {
             }
         });
 
-        // Fetch next host
-        new UserStory2RotateHost().fetchNextHost(groupName, new UserStory2RotateHost.OnNextHostFetched() {
-            @Override
-            public void onNextHostFetched(String playerName) {
-                if (playerName != null) {
-                    nextHost.setText(playerName + " is the next host. " + playerName + " please create the next event.");
-                } else {
-                    nextHost.setText("Failed to load next host.");
-                }
-            }
-        });
+        // Send Notification who the next host is
+        //new UserStory2RotateHost(this).fetchNextHostAndNotify(groupName, this);
 
         // Set up button click listeners
         createEventButton.setOnClickListener(v -> startActivity(new Intent(DashboardActivity.this, AddEventActivity.class)));
