@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.boardgamerapp.library.UserStory1NextMatchDay;
-import com.example.boardgamerapp.library.UserStory2RotateHost;
 import com.example.boardgamerapp.library.UserStory4PreVoting;
 import com.example.boardgamerapp.store.Store;
 import com.google.android.material.snackbar.Snackbar;
@@ -125,9 +124,6 @@ public class DashboardActivity extends AppCompatActivity {
                 voteContainer.removeAllViews(); // Clear buttons if no event found
             }
         });
-
-        // Send Notification who the next host is
-        //new UserStory2RotateHost(this).fetchNextHostAndNotify(groupName, this);
 
         // Set up button click listeners
         createEventButton.setOnClickListener(v -> startActivity(new Intent(DashboardActivity.this, AddEventActivity.class)));
