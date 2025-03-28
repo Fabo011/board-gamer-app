@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -13,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.boardgamerapp.library.UserStory1NextMatchDay;
 import com.example.boardgamerapp.library.UserStory4PreVoting;
+import com.example.boardgamerapp.library.UserStoryOptional;
 import com.example.boardgamerapp.store.Store;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -57,10 +59,18 @@ public class DashboardActivity extends AppCompatActivity {
         matchDay.getCurrentMatchday(groupName, new UserStory1NextMatchDay.getCurrentMatchdayCallback() {
             @Override
             public void onSuccess(String host, String matchday, String eventId, List<Map<String, Object>> gameVotes) {
+                store.saveCurrentEventId(eventId);
                 cardTitle.setText("Next Game Night: " + matchday);
                 cardDescription.setText("Host: " + host);
 
+                currentEventId = eventId; // Save the event ID
+
                 voteContainer.removeAllViews(); // Clear old buttons
+
+                String groupName = store.getGroupName();
+                Spinner cuisineDropdown = UserStoryOptional.createCuisineDropdown(DashboardActivity.this, groupName, eventId);
+                voteContainer.addView(cuisineDropdown);
+
                 for (Map<String, Object> game : gameVotes) {
                     String gameName = (String) game.get("game");
                     int votes = ((Long) game.get("votes")).intValue(); // Convert Long to int
@@ -137,6 +147,11 @@ public class DashboardActivity extends AppCompatActivity {
             Toast.makeText(this, "No games found for voting!", Toast.LENGTH_LONG).show();
             return;
         }
+
+        // Add the cuisine dropdown
+        String groupName = store.getGroupName();
+        Spinner cuisineDropdown = UserStoryOptional.createCuisineDropdown(this, groupName, eventId);
+        voteContainer.addView(cuisineDropdown);
 
         for (Map<String, Object> game : gameVotes) {
             String gameName = (String) game.get("game");

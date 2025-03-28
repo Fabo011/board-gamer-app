@@ -19,6 +19,7 @@ public class UserStory2RotateHost {
     private Context context;
 
     // Constructor accepts Context to initialize Store and MessagingService
+
     public UserStory2RotateHost(Context context) {
         this.context = context;
         database = new Database();
@@ -57,6 +58,7 @@ public class UserStory2RotateHost {
 
                 // Get the name of the new host
                 String newHost = players.get((int) newNextHostIndex).get("name");
+                database.updateNextHostIndex(groupName, newNextHostIndex);
 
                 // Send a notification that the next host is set
                 messagingService.sendFCMMessage(
@@ -65,8 +67,17 @@ public class UserStory2RotateHost {
                         newHost + " " + context.getString(R.string.next_host_text) + " " + newHost + " > " + context.getString(R.string.next_host_text_2),
                         true
                 );
-                database.updateNextHostIndex(groupName, newNextHostIndex);
             }
         });
+    }
+
+    // Optional UserStory
+    public void reminderTeamCuisine(Context context, String groupName) {
+        messagingService.sendFCMMessage(
+                context,
+                groupName,
+                context.getString(R.string.cuisine_reminder_1) + " " + groupName + ". " + context.getString(R.string.cuisine_reminder),
+                true
+        );
     }
 }
