@@ -6,9 +6,15 @@
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-
-    <string name="lorem_ipsum">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem.
-    </string>
     <string name="create_or_join_a_group">Create or join a group</string>
+    <string name="new_message">Neue Nachricht</string>
+    <string name="next_host_text">ist der nächste Veranstalter.</string>
+    <string name="next_host_text_2">Bitte erstelle den nächsten Spieleabend.</string>
+    <string name="event_details_missing">Bitte gib alle Information an, wie Spieltag, Spieltag etc.</string>
+    <string name="message_sent_info">Nachricht wurde gesendet.</string>
+    <string name="player_name">Spieler Name</string>
+    <string name="group_name">Gruppen Name</string>
+    <string name="group_password">Gruppen Password</string>
+    <string name="create_new_group">On für erstellen, off für beitreten</string>
+    <string name="submit">Senden</string>
 </resources>

@@ -4,7 +4,6 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -15,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.boardgamerapp.library.UserStory2RotateHost;
 import com.example.boardgamerapp.store.Store;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -38,18 +36,16 @@ public class AddEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_event);
 
-        // Initialize UI elements
         editTextLocation = findViewById(R.id.editTextLocation);
         editTextDateTime = findViewById(R.id.editTextDateTime);
         gamesLayout = findViewById(R.id.gamesLayout);
         btnAddGame = findViewById(R.id.btnAddGame);
         btnCreateEvent = findViewById(R.id.btnCreateEvent);
 
-        // Initialize Store to retrieve group name and player name
         store = new Store(this);
 
-        // Initialize UserStory2RotateHost
-        userStory2RotateHost = new UserStory2RotateHost();
+        // Initialize UserStory2RotateHost with this activity context
+        userStory2RotateHost = new UserStory2RotateHost(AddEventActivity.this);  // Pass the context (Activity)
 
         // Add game input fields dynamically
         List<EditText> gameFields = new ArrayList<>();
@@ -108,18 +104,18 @@ public class AddEventActivity extends AppCompatActivity {
             }
 
             if (location.isEmpty() || dateTime.isEmpty() || gameVotes.isEmpty()) {
-                Toast.makeText(AddEventActivity.this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddEventActivity.this, getString(R.string.event_details_missing), Toast.LENGTH_SHORT).show();
                 return;
             }
 
             String groupName = store.getGroupName();
-            String hostName = store.getPlayerName(); // Assuming this method returns the player name
+            String hostName = store.getPlayerName();
 
             // Generate a unique event ID
             String eventId = "evt" + System.currentTimeMillis();
 
             // Create event and update host
-            userStory2RotateHost.createEventAndUpdateHost(groupName, eventId, location, dateTime, hostName, gameVotes);
+            userStory2RotateHost.createEventAndUpdateHost(AddEventActivity.this, groupName, eventId, location, dateTime, hostName, gameVotes);
 
             // Return to DashboardActivity
             Intent intent = new Intent(AddEventActivity.this, DashboardActivity.class);

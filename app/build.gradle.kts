@@ -33,6 +33,18 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    packaging {
+        resources.excludes += setOf(
+            "META-INF/DEPENDENCIES",
+            "META-INF/LICENSE",
+            "META-INF/LICENSE.txt",
+            "META-INF/license.txt",
+            "META-INF/NOTICE",
+            "META-INF/NOTICE.txt",
+            "META-INF/notice.txt"
+        )
+    }
 }
 
 dependencies {
@@ -48,7 +60,11 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.firestore)
+    implementation(libs.google.auth.library.oauth2.http)
     implementation ("androidx.cardview:cardview:1.0.0")
     implementation ("com.google.android.material:material:1.4.0")
-
+    implementation("com.google.http-client:google-http-client-gson:1.41.0") {
+        exclude(group = "org.apache.httpcomponents", module = "httpclient")
+        exclude(group = "org.apache.httpcomponents", module = "httpcore")
+    }
 }

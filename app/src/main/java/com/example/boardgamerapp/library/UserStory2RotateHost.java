@@ -1,5 +1,10 @@
 package com.example.boardgamerapp.library;
 
+import android.content.Context;
+
+import com.example.boardgamerapp.R;
+import com.example.boardgamerapp.messaging.MessagingService;
+import com.example.boardgamerapp.store.Store;
 import com.example.boardgamerapp.database.Database;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -9,37 +14,19 @@ import java.util.Map;
 public class UserStory2RotateHost {
 
     final Database database;
+    private MessagingService messagingService;
+    private Store store;
+    private Context context;
 
-    public UserStory2RotateHost() {
-        database = new Database();  // Initialize the database class
+    // Constructor accepts Context to initialize Store and MessagingService
+    public UserStory2RotateHost(Context context) {
+        this.context = context;
+        database = new Database();
+        messagingService = new MessagingService();
+        store = new Store(context);
     }
 
-    public void fetchNextHost(String groupName, OnNextHostFetched callback) {
-        database.fetchGroup(groupName, task -> {
-            DocumentSnapshot documentSnapshot = task.getResult();
-
-            if (documentSnapshot != null && documentSnapshot.exists()) {
-                // Retrieve the next_host_index
-                long nextHostIndex = documentSnapshot.getLong("next_host_index");
-                // Get the list of players
-                List<Map<String, String>> players = (List<Map<String, String>>) documentSnapshot.get("players");
-
-                // Ensure the index is within bounds of the players list
-                if (nextHostIndex >= 0 && nextHostIndex < players.size()) {
-                    // Get the player name at the next_host_index
-                    String playerName = players.get((int) nextHostIndex).get("name");
-                    // Return the player name via the callback
-                    callback.onNextHostFetched(playerName);
-                } else {
-                    callback.onNextHostFetched(null);
-                }
-            } else {
-                callback.onNextHostFetched(null);
-            }
-        });
-    }
-
-    public void createEventAndUpdateHost(String groupName, String eventId, String location, String date, String hostName, List<Map<String, Object>> gameVotes) {
+    public void createEventAndUpdateHost(Context context, String groupName, String eventId, String location, String date, String hostName, List<Map<String, Object>> gameVotes) {
         // Create the new event based on the provided schema
         Map<String, Object> newEvent = Map.of(
                 "event_id", eventId,
@@ -68,14 +55,18 @@ public class UserStory2RotateHost {
                     newNextHostIndex = 0; // Reset to 0 if it exceeds the number of players
                 }
 
-                // Update the next_host_index
+                // Get the name of the new host
+                String newHost = players.get((int) newNextHostIndex).get("name");
+
+                // Send a notification that the next host is set
+                messagingService.sendFCMMessage(
+                        context,
+                        groupName,
+                        newHost + " " + context.getString(R.string.next_host_text) + " " + newHost + " > " + context.getString(R.string.next_host_text_2),
+                        true
+                );
                 database.updateNextHostIndex(groupName, newNextHostIndex);
             }
         });
-    }
-
-    // Callback interface to pass the player name
-    public interface OnNextHostFetched {
-        void onNextHostFetched(String playerName);
     }
 }

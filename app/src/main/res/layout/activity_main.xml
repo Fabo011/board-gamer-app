@@ -35,7 +35,7 @@
             android:id="@+id/etPlayerName"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:hint="Player Name"
+            android:hint="@string/player_name"
             android:padding="12dp"/>
 
         <!-- Group Name Input -->
@@ -43,7 +43,7 @@
             android:id="@+id/etGroupName"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:hint="Group Name"
+            android:hint="@string/group_name"
             android:padding="12dp"
             android:layout_marginTop="8dp"/>
 
@@ -52,7 +52,7 @@
             android:id="@+id/etGroupPassword"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:hint="Group Password"
+            android:hint="@string/group_password"
             android:inputType="textPassword"
             android:padding="12dp"
             android:layout_marginTop="8dp"/>
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:minHeight="48dp"
             android:padding="12dp"
-            android:text="Create new group"
+            android:text="@string/create_new_group"
             android:textSize="16sp"
             android:textColor="@color/black"/>
 
@@ -73,7 +73,7 @@
             android:id="@+id/btnSubmit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Submit"
+            android:text="@string/submit"
             android:textSize="18sp"
             android:textColor="@color/white"
             android:layout_marginTop="16dp"/>

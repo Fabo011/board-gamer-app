@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.boardgamerapp.library.UserStory1NextMatchDay;
-import com.example.boardgamerapp.library.UserStory2RotateHost;
 import com.example.boardgamerapp.library.UserStory4PreVoting;
 import com.example.boardgamerapp.store.Store;
 import com.google.android.material.snackbar.Snackbar;
@@ -88,9 +87,7 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
     private void initializeUI() {
-        // Initialize UI elements
         headline = findViewById(R.id.dashboard_headline);
-        nextHost = findViewById(R.id.notice_text);
         createEventButton = findViewById(R.id.create_event_button);
         messagingButton = findViewById(R.id.messaging_button);
         cardImage = findViewById(R.id.card_image);
@@ -125,18 +122,6 @@ public class DashboardActivity extends AppCompatActivity {
             public void onFailure(String errorMessage) {
                 cardTitle.setText(errorMessage);
                 voteContainer.removeAllViews(); // Clear buttons if no event found
-            }
-        });
-
-        // Fetch next host
-        new UserStory2RotateHost().fetchNextHost(groupName, new UserStory2RotateHost.OnNextHostFetched() {
-            @Override
-            public void onNextHostFetched(String playerName) {
-                if (playerName != null) {
-                    nextHost.setText(playerName + " is the next host. " + playerName + " please create the next event.");
-                } else {
-                    nextHost.setText("Failed to load next host.");
-                }
             }
         });
 

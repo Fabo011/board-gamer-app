@@ -2,28 +2,24 @@ package com.example.boardgamerapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
-import android.widget.TextView;
-
-
 import androidx.appcompat.app.AppCompatActivity;
-
 
 import com.example.boardgamerapp.library.MainActivityLibrary;
 import com.example.boardgamerapp.store.Store;
+import com.example.boardgamerapp.messaging.MessagingService;
 
 public class MainActivity extends AppCompatActivity {
 
     private EditText etPlayerName, etGroupName, etGroupPassword;
     private Switch toggleSwitch;
     private Button btnSubmit;
-
     private MainActivityLibrary library;
     private Store store;
-
-    private TextView textView;
+    private MessagingService messagingService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +30,12 @@ public class MainActivity extends AppCompatActivity {
         library = new MainActivityLibrary();
         store = new Store(this); // Pass context to Store
 
+        // Initialize the MessagingService
+        messagingService = new MessagingService();
+
+        // Subscribe to the group topic using the group name stored in the Store
+        String groupName = store.getGroupName();
+
         // Initialize UI elements
         etPlayerName = findViewById(R.id.etPlayerName);
         etGroupName = findViewById(R.id.etGroupName);
@@ -41,19 +43,23 @@ public class MainActivity extends AppCompatActivity {
         toggleSwitch = findViewById(R.id.toggleSwitch);
         btnSubmit = findViewById(R.id.btnSubmit);
 
-
         // Handle form submission
         btnSubmit.setOnClickListener(view -> {
             String playerName = etPlayerName.getText().toString().trim();
-            String groupName = etGroupName.getText().toString().trim();
+            String groupNameInput = etGroupName.getText().toString().trim();
             String groupPassword = etGroupPassword.getText().toString().trim();
             boolean isCreatingGroup = toggleSwitch.isChecked();
 
             // Save group name to Store (SharedPreferences)
-            store.saveGroupName(groupName, playerName);
+            store.saveGroupName(groupNameInput, playerName);
+
+            if (groupName != null && !groupName.isEmpty()) {
+                messagingService.subscribeToTopic(groupName);
+                Log.d("MessagingService", "Subscribed to group topic: " + groupName);
+            }
 
             // Pass the player and group info to the library
-            library.handleFormSubmission(this, playerName, groupName, groupPassword, isCreatingGroup, this::navigateToDashboard);
+            library.handleFormSubmission(this, playerName, groupNameInput, groupPassword, isCreatingGroup, this::navigateToDashboard);
         });
     }
 
