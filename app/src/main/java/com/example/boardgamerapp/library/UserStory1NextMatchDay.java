@@ -2,8 +2,16 @@ package com.example.boardgamerapp.library;
 
 import android.content.Context;
 import android.util.Log;
+<<<<<<< Updated upstream
 import com.example.boardgamerapp.database.Database;
 import com.example.boardgamerapp.store.Store;
+=======
+
+import com.example.boardgamerapp.database.Database;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+>>>>>>> Stashed changes
 import com.google.firebase.firestore.DocumentSnapshot;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -12,10 +20,24 @@ import java.util.List;
 import java.util.Map;
 
 public class UserStory1NextMatchDay {
+<<<<<<< Updated upstream
     private final Database database;
     private Context context; // Add context reference
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
     private static final long ONE_DAY_MILLIS = 24 * 60 * 60 * 1000;
+=======
+//Attribute
+
+
+    private String matchday;
+    private String host;
+
+    private FirebaseFirestore database;
+
+//Konstruktoren
+    public UserStory1NextMatchDay() {
+        database = FirebaseFirestore.getInstance();
+>>>>>>> Stashed changes
 
     // New constructor accepting Context
     public UserStory1NextMatchDay(Context context) {

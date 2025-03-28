@@ -2,6 +2,11 @@ package com.example.boardgamerapp.database;
 
 import android.util.Log;
 import com.google.android.gms.tasks.OnCompleteListener;
+<<<<<<< Updated upstream
+=======
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+>>>>>>> Stashed changes
 import com.google.firebase.firestore.*;
 
 import java.util.ArrayList;
@@ -12,10 +17,13 @@ import java.util.Map;
 public class Database {
     private static final String TAG = "Database";
     private static final String COLLECTION_NAME = "groups"; // Firestore collection
+
+    private DocumentReference eventsCollection;
     private FirebaseFirestore db;
 
     public Database() {
         db = FirebaseFirestore.getInstance();
+
     }
 
     /**
@@ -119,6 +127,7 @@ public class Database {
                 .addOnCompleteListener(onCompleteListener);
     }
 
+<<<<<<< Updated upstream
     public void updateCuisineSelection(String groupName, String eventId, String selectedCuisine) {
         DocumentReference groupRef = db.collection(COLLECTION_NAME).document(groupName);
 
@@ -173,6 +182,79 @@ public class Database {
         }).addOnFailureListener(e -> Log.e(TAG, "Error fetching group", e));
     }
 
+=======
+    public void getEvents(String groupname, final OnCompleteListener<List<Map<String, Object>>> listener) {
+        db.collection(COLLECTION_NAME)
+                .document(groupname)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                Map<String, Object> data = document.getData();
+                                if (data != null && data.containsKey("events")) {
+                                    List<Map<String, Object>> events = (List<Map<String, Object>>) data.get("events");
+                                    listener.onComplete(Tasks.forResult(events));
+                                } else {
+                                    listener.onComplete(Tasks.forResult(new ArrayList<>())); // Leere Liste, wenn "events" nicht vorhanden ist
+                                }
+                            } else {
+                                listener.onComplete(Tasks.forException(new Exception("Dokument nicht gefunden")));
+                            }
+                        } else {
+                            listener.onComplete(Tasks.forException(task.getException()));
+                        }
+                    }
+                });
+    }
+
+//    public void addGameVotesToEvent(String eventId, Map<String, Integer> newGameVotes, final OnCompleteListener<Void> listener) {
+//        eventsCollection.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//            @Override
+//            public void onComplete(Task<DocumentSnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    DocumentSnapshot document = task.getResult();
+//                    if (document.exists()) {
+//                        List<Map<String, Object>> events = (List<Map<String, Object>>) document.get("events");
+//                        if (events != null) {
+//                            for (int i = 0; i < events.size(); i++) {
+//                                Map<String, Object> event = events.get(i);
+//                                if (eventId.equals(event.get("event_id"))) {
+//                                    List<Map<String, Object>> gameVotes = (List<Map<String, Object>>) event.get("game_votes");
+//                                    if (gameVotes == null) {
+//                                        gameVotes = new ArrayList<>();
+//                                    }
+//                                    for (Map.Entry<String, Integer> entry : newGameVotes.entrySet()) {
+//                                        Map<String, Object> newVote = new HashMap<>();
+//                                        newVote.put("game", entry.getKey());
+//                                        newVote.put("votes", entry.getValue());
+//                                        gameVotes.add(newVote);
+//                                    }
+//                                    event.put("game_votes", gameVotes);
+//                                    events.set(i, event); // Event mit aktualisierten game_votes ersetzen
+//
+//                                    // Aktualisiere das Dokument in Firestore
+//                                    eventsCollection.update("events", events).addOnCompleteListener(listener);
+//                                    return; // Beende die Methode nach erfolgreicher Aktualisierung
+//                                }
+//                            }
+//                            listener.onComplete(Tasks.forException(new Exception("Event nicht gefunden")));
+//                        } else {
+//                            listener.onComplete(Tasks.forException(new Exception("Keine Events gefunden")));
+//                        }
+//                    } else {
+//                        listener.onComplete(Tasks.forException(new Exception("Dokument nicht gefunden")));
+//                    }
+//                } else {
+//                    listener.onComplete(Tasks.forException(task.getException()));
+//                }
+//            }
+//        });
+//    }
+
+>>>>>>> Stashed changes
 
 
     // Interface für den Callback

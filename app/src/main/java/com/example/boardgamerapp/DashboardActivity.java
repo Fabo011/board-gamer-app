@@ -8,18 +8,29 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+<<<<<<< Updated upstream
 import android.widget.Toast;
 
+=======
+>>>>>>> Stashed changes
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.boardgamerapp.library.UserStory1NextMatchDay;
+<<<<<<< Updated upstream
 import com.example.boardgamerapp.library.UserStory4PreVoting;
 import com.example.boardgamerapp.library.UserStoryOptional;
+=======
+import com.example.boardgamerapp.library.UserStory2RotateHost;
+import com.example.boardgamerapp.library.UserStory3AddGameVotes;
+>>>>>>> Stashed changes
 import com.example.boardgamerapp.store.Store;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
+<<<<<<< Updated upstream
 import java.util.List;
 import java.util.Map;
+=======
+>>>>>>> Stashed changes
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -38,7 +49,12 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView cardDescription;
     private LinearLayout voteContainer;
 
+<<<<<<< Updated upstream
     private String currentEventId; // Store current event ID
+=======
+    Button voteButton;
+    BottomNavigationView bottomNav;
+>>>>>>> Stashed changes
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,11 +119,22 @@ public class DashboardActivity extends AppCompatActivity {
         cardImage = findViewById(R.id.card_image);
         cardTitle = findViewById(R.id.card_title);
         cardDescription = findViewById(R.id.card_description);
+<<<<<<< Updated upstream
         voteContainer = findViewById(R.id.vote_container); // LinearLayout to hold vote buttons
 
         headline.setText("Dashboard");
 
         // Initialize Store
+=======
+        voteButton = findViewById(R.id.voteButton);
+        bottomNav = findViewById(R.id.bottom_navigation);
+        headline.setText("Dashboard");
+
+
+
+
+        // Initialize Store to retrieve group name from SharedPreferences
+>>>>>>> Stashed changes
         store = new Store(this);
         String groupName = store.getGroupName();
 
@@ -115,8 +142,26 @@ public class DashboardActivity extends AppCompatActivity {
         matchDay = new UserStory1NextMatchDay(this);
         preVoting = new UserStory4PreVoting(this);
 
+<<<<<<< Updated upstream
         // Fetch match day details & game voting
         matchDay.getCurrentMatchday(groupName, new UserStory1NextMatchDay.getCurrentMatchdayCallback() {
+=======
+        //Initialize UserStory1Matchday
+        matchDay = new UserStory1NextMatchDay();
+
+
+
+
+
+        // Alle Spielvorschläge abrufen und in Logcat ausgeben
+        UserStory3AddGameVotes story3 = new UserStory3AddGameVotes();
+        story3.getEvents(groupName);
+
+
+
+        //Get player Name and Matchdate from current event
+        /*matchDay.getCurrentMatchday(groupName, new UserStory1NextMatchDay.getCurrentMatchdayCallback() {
+>>>>>>> Stashed changes
             @Override
             public void onSuccess(String player, String matchday, String eventId, List<Map<String, Object>> gameVotes) {
                 cardImage.setImageResource(R.drawable.gamenight);
@@ -133,7 +178,7 @@ public class DashboardActivity extends AppCompatActivity {
                 cardTitle.setText(errorMessage);
                 voteContainer.removeAllViews(); // Clear buttons if no event found
             }
-        });
+        });*/
 
         // Set up button click listeners
         createEventButton.setOnClickListener(v -> startActivity(new Intent(DashboardActivity.this, AddEventActivity.class)));
@@ -182,4 +227,8 @@ public class DashboardActivity extends AppCompatActivity {
             Snackbar.make(voteContainer, "Vote submitted for " + gameName, Snackbar.LENGTH_LONG).show();
         });
     }
+
+
+
+
 }
