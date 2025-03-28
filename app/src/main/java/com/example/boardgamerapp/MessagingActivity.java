@@ -1,7 +1,7 @@
 package com.example.boardgamerapp;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -9,12 +9,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.boardgamerapp.messaging.MessagingService;
+import com.example.boardgamerapp.store.Store;
 
 public class MessagingActivity extends AppCompatActivity {
 
     private EditText messageInput;
     private Button sendButton;
     private MessagingService messagingService;
+    private Store store;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,29 +26,24 @@ public class MessagingActivity extends AppCompatActivity {
         messageInput = findViewById(R.id.messageInput);
         sendButton = findViewById(R.id.sendButton);
         messagingService = new MessagingService();
-
-        // Subscribe to topic when activity starts
-        messagingService.subscribeToTopic("topic1");
+        store = new Store(this);
+        String groupName = store.getGroupName();
 
         sendButton.setOnClickListener(v -> {
             String message = messageInput.getText().toString().trim();
             if (!message.isEmpty()) {
-                messagingService.sendFCMMessage(MessagingActivity.this, "topic1", message, true);  // Send to topic
-                Toast.makeText(MessagingActivity.this, "Message sent to topic1!", Toast.LENGTH_SHORT).show();
+                // Send the message to the group's topic
+                messagingService.sendFCMMessage(MessagingActivity.this, groupName, message, true);
+                Toast.makeText(MessagingActivity.this, "Message sent to " + groupName, Toast.LENGTH_SHORT).show();
+
+                // Navigate back to DashboardActivity after sending the message
+                Intent intent = new Intent(MessagingActivity.this, DashboardActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             } else {
                 Toast.makeText(MessagingActivity.this, "Please enter a message", Toast.LENGTH_SHORT).show();
             }
         });
     }
 }
-
-
-// sendNotificationToTopic("topic1", message);
-// Function to send notification to a topic
-    /*private void sendNotificationToTopic(String topic, String message) {
-        FirebaseMessaging.getInstance().send(new RemoteMessage.Builder("your_project_id@fcm.googleapis.com")
-                .setMessageId("1")
-                .addData("message", message)
-                .setTopic(topic)
-                .build());
-    }*/
