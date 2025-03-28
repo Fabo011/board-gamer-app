@@ -104,7 +104,7 @@ public class AddEventActivity extends AppCompatActivity {
             }
 
             if (location.isEmpty() || dateTime.isEmpty() || gameVotes.isEmpty()) {
-                Toast.makeText(AddEventActivity.this, "Please fill in all fields.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(AddEventActivity.this, getString(R.string.event_details_missing), Toast.LENGTH_SHORT).show();
                 return;
             }
 

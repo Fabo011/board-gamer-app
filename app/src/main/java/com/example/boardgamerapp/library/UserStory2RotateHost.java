@@ -1,6 +1,8 @@
 package com.example.boardgamerapp.library;
 
 import android.content.Context;
+
+import com.example.boardgamerapp.R;
 import com.example.boardgamerapp.messaging.MessagingService;
 import com.example.boardgamerapp.store.Store;
 import com.example.boardgamerapp.database.Database;
@@ -18,6 +20,7 @@ public class UserStory2RotateHost {
 
     // Constructor accepts Context to initialize Store and MessagingService
     public UserStory2RotateHost(Context context) {
+        this.context = context;
         database = new Database();
         messagingService = new MessagingService();
         store = new Store(context);
@@ -59,7 +62,7 @@ public class UserStory2RotateHost {
                 messagingService.sendFCMMessage(
                         context,
                         groupName,
-                        newHost + " is the next host. " + newHost + " please create the next event.",
+                        newHost + " " + context.getString(R.string.next_host_text) + " " + newHost + " > " + context.getString(R.string.next_host_text_2),
                         true
                 );
                 database.updateNextHostIndex(groupName, newNextHostIndex);

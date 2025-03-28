@@ -34,7 +34,7 @@ public class MessagingActivity extends AppCompatActivity {
             String message = playerName + ": " + messageInput.getText().toString().trim();
             // Send the message to the group's topic
             messagingService.sendFCMMessage(MessagingActivity.this, groupName, message, true);
-            Toast.makeText(MessagingActivity.this, "Message sent to " + groupName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(MessagingActivity.this, getString(R.string.message_sent_info) + " " + groupName, Toast.LENGTH_SHORT).show();
 
             // Navigate back to DashboardActivity after sending the message
             Intent intent = new Intent(MessagingActivity.this, DashboardActivity.class);

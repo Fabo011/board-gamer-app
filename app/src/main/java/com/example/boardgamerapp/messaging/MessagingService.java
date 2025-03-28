@@ -75,7 +75,7 @@ public class MessagingService extends FirebaseMessagingService {
         }
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Neue Nachricht")
+                .setContentTitle(getString(R.string.new_message))
                 .setContentText(messageBody)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setSmallIcon(R.drawable.notification)
