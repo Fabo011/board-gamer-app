@@ -3,6 +3,7 @@ package com.example.boardgamerapp.library;
 import android.content.Context;
 import android.util.Log;
 import com.example.boardgamerapp.database.Database;
+import com.example.boardgamerapp.store.Store;
 import com.google.firebase.firestore.DocumentSnapshot;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,7 +17,7 @@ public class UserStory1NextMatchDay {
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
     private static final long ONE_DAY_MILLIS = 24 * 60 * 60 * 1000;
 
-    // ✅ New constructor accepting Context
+    // New constructor accepting Context
     public UserStory1NextMatchDay(Context context) {
         this.context = context;
         database = new Database();

@@ -30,5 +30,15 @@ public class Store {
     public String getPlayerName() {
         return sharedPreferences.getString(PLAYER_NAME_KEY, "DefaultGroup");
     }
+
+    public void saveCurrentEventId(String eventId) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("eventId", eventId);
+        editor.apply();
+    }
+
+    public String getCurrentEventId() {
+        return sharedPreferences.getString("eventId", "");
+    }
 }
 

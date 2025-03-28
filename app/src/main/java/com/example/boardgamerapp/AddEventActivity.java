@@ -116,6 +116,8 @@ public class AddEventActivity extends AppCompatActivity {
 
             // Create event and update host
             userStory2RotateHost.createEventAndUpdateHost(AddEventActivity.this, groupName, eventId, location, dateTime, hostName, gameVotes);
+            //userStory2RotateHost.reminderTeamCuisine(AddEventActivity.this, groupName);
+
 
             // Return to DashboardActivity
             Intent intent = new Intent(AddEventActivity.this, DashboardActivity.class);

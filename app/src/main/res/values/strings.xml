@@ -17,4 +17,6 @@
     <string name="group_password">Gruppen Password</string>
     <string name="create_new_group">On für erstellen, off für beitreten</string>
     <string name="submit">Senden</string>
+    <string name="cuisine_reminder">Bitte wählt eure Lieblingsessensrichtung für das nächste Event.</string>
+    <string name="cuisine_reminder_1">An die</string>
 </resources>
