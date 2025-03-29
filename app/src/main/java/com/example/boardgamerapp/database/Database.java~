@@ -257,7 +257,7 @@ public class Database {
 
                             Map<String, Object> newGame = new HashMap<>();
                             newGame.put("game", game);
-                            newGame.put("votes", 1); // Initialize with count 1
+                            newGame.put("vote", 1); // Initialize with count 1
                             games.add(newGame);
 
 

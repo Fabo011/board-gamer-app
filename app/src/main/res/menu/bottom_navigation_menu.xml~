@@ -12,7 +12,7 @@
 
     <item
         android:id="@+id/navigation_dashboard"
-        android:icon="@drawable/spielvorschlag"
+        android:icon="@drawable/s"
         android:title="Spielvorschlag" />
 
     <item

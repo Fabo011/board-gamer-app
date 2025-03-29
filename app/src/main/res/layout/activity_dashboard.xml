@@ -1,136 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:layout_marginTop="24dp">
+    android:layout_height="match_parent">
 
-    <!-- Headline TextView -->
-    <TextView
-        android:id="@+id/dashboard_headline"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Dashboard"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:paddingBottom="16dp"
-        android:textColor="@android:color/black"/>
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Buttons Row -->
     <LinearLayout
+        android:id="@+id/activity_content"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="20dp"
-        android:padding="10dp">
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Create Event Button -->
-        <Button
-            android:id="@+id/create_event_button"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <TextView
+            android:id="@+id/dashboard_headline"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Create Event"
-            android:padding="12dp"
-            android:layout_marginEnd="10dp"
-            android:textAllCaps="false"/>
+            android:text="Dashboard"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="16dp"
+            android:textColor="@android:color/black"/>
 
-        <!-- Messaging Button -->
-        <Button
-            android:id="@+id/messaging_button"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Messaging"
-            android:padding="12dp"
-            android:textAllCaps="false"/>
-    </LinearLayout>
-
-    <!-- CardView for the match details and vote buttons -->
-    <androidx.cardview.widget.CardView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="4dp"
-        app:cardBackgroundColor="#170048">
+        <include layout="@layout/event_gastgeber" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:padding="10dp">
 
-            <!-- Game Night Image -->
-            <ImageView
-                android:id="@+id/card_image"
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:scaleType="centerCrop"/>
+        </LinearLayout>
 
-            <!-- Game Night Title -->
-            <TextView
-                android:id="@+id/card_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#FFFFFF"/>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/vote_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp"
+            app:cardBackgroundColor="#170048">
 
-            <!-- Game Night Description -->
-            <TextView
-                android:id="@+id/card_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="16dp"
-                android:textSize="16sp"
-                android:textColor="#FFFFFF"/>
-
-            <!-- LinearLayout for dynamically created vote buttons (inside the card) -->
             <LinearLayout
-                android:id="@+id/vote_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center"
-                android:paddingTop="20dp"
-                android:paddingBottom="20dp">
+                android:gravity="center">
 
-                <!-- Example of a vote button inside the card -->
-                <Button
-                    android:id="@+id/vote_button_example"
+                <LinearLayout
+                    android:id="@+id/vote_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Game Name (Votes)"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp"
-                    android:padding="12dp"
-                    android:backgroundTint="#6A4C93"
-                    android:layout_marginBottom="10dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_gravity="center"
-                    android:radius="12dp" />
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp">
+
+
+                </LinearLayout>
 
             </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
 
-    <!-- Bottom Navigation View -->
+    </LinearLayout>
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_navigation_menu"
-        app:itemBackground="@color/primaryColor"/>
-</LinearLayout>
+        app:itemBackground="@color/secundaryColor"
+        app:itemTextColor="@color/white"
+        app:itemIconTint="@color/primaryButtonColor"
+        app:itemRippleColor="@color/primaryButtonColor"
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/done"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

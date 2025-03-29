@@ -173,12 +173,9 @@ public class DashboardActivity extends AppCompatActivity {
         // Set up button click listeners
         //createEventButton.setOnClickListener(v -> startActivity(new Intent(DashboardActivity.this, AddEventActivity.class)));
         //messagingButton.setOnClickListener(v -> startActivity(new Intent(DashboardActivity.this, MessagingActivity.class)));
-        sendMessage.setOnClickListener(v -> {
-                    hideActivityContent();
-                    loadFragment(new MessagingFragment());
-                });
-
-
+        sendMessage.setOnClickListener(v ->
+                hideActivityContent()
+                loadFragment(new MessagingFragment()));
     }
 
     private void displayGameVoteButtons(List<Map<String, Object>> gameVotes, String eventId) {

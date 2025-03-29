@@ -1,0 +1,151 @@
+package com.example.boardgamerapp.library;
+
+import static android.content.ContentValues.TAG;
+
+import android.util.Log;
+
+import com.example.boardgamerapp.database.Database;
+
+import com.google.firebase.firestore.DocumentSnapshot;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public class UserStory3GameSuggest {
+
+    private final Database database;
+    private String spielname;
+    private String minspieler;
+    private String maxspieler;
+    private String beschreibung;
+    private String eventid;
+
+    private String groupname;
+    public UserStory3GameSuggest(String groupname, String spielname) {
+        database = new Database();
+        this.groupname = groupname;
+        this.spielname = spielname;
+
+    }
+
+    public UserStory3GameSuggest(Database database, String spielname, String minspieler, String maxspieler, String beschreibung) {
+        this.database = database;
+        this.spielname = spielname;
+        this.minspieler = minspieler;
+        this.maxspieler = maxspieler;
+        this.beschreibung = beschreibung;
+    }
+
+
+
+
+    public void events(String groupName,String spielname) {
+        database.getEvents(groupName, new Database.OnDocumentReceivedListener() {
+            @Override
+            public void onDocumentReceived(DocumentSnapshot document) {
+                Log.i(TAG, "onDocumentReceived: " + document.getData());
+
+                // Hole die Liste von Events aus dem DocumentSnapshot
+                List<Map<String, Object>> events = (List<Map<String, Object>>) document.get("events");
+                Log.i(TAG, "onDocumentReceived: " + events.size() + " Anzahl der Events");
+
+                //Prüfen auf das nächste Datum in der Zukunft, also der anstehende Event
+                Date naechstesDatum = null;
+
+                Date heute = Calendar.getInstance().getTime();
+
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+                    for (Map<String, Object> event : events) {
+                        String dateString = event.get("date").toString();
+                        Date datum = sdf.parse(dateString);
+                        Log.i(TAG, "onDocumentReceived: " + event.get("date"));
+
+                        if (datum.after(heute)) {
+                            if (naechstesDatum == null || datum.before(naechstesDatum)) {
+                                naechstesDatum = datum;
+                                eventid = event.get("event_id").toString();
+                               setEventid(eventid);
+                            }
+                        }
+                    }
+                } catch (ParseException e) {
+                    Log.e(TAG, "ParseException: " + e.getMessage());
+
+                }
+
+                if (naechstesDatum != null) {
+                    Log.i(TAG, "onDocumentReceived: " + naechstesDatum + " Spieltag" + eventid + " Event ID");
+                    database.updateGameSuggestion(groupName,eventid,spielname);
+                } else {
+                    Log.i(TAG, "onDocumentReceived: Kein zukünftiger Spieltag gefunden.");
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.i(TAG, "onDocumentReceived: Fehler " + e );
+            }
+        });
+    }
+
+
+
+    public Database getDatabase() {
+        return database;
+    }
+
+    public String getSpielname() {
+        return spielname;
+    }
+
+    public void setSpielname(String spielname) {
+        this.spielname = spielname;
+    }
+
+    public String getMinspieler() {
+        return minspieler;
+    }
+
+    public void setMinspieler(String minspieler) {
+        this.minspieler = minspieler;
+    }
+
+    public String getMaxspieler() {
+        return maxspieler;
+    }
+
+    public void setMaxspieler(String maxspieler) {
+        this.maxspieler = maxspieler;
+    }
+
+    public String getBeschreibung() {
+        return beschreibung;
+    }
+
+    public void setBeschreibung(String beschreibung) {
+        this.beschreibung = beschreibung;
+    }
+
+    public String getEventid() {
+        return eventid;
+    }
+
+    public void setEventid(String eventid) {
+        this.eventid = eventid;
+    }
+
+    public String getGroupname() {
+        return groupname;
+    }
+
+    public void setGroupname(String groupname) {
+        this.groupname = groupname;
+    }
+}
