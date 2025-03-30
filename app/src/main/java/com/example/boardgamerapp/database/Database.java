@@ -1,5 +1,7 @@
 package com.example.boardgamerapp.database;
 
+import static android.content.ContentValues.TAG;
+
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -8,9 +10,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.*;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -253,17 +260,14 @@ public class Database {
                             }
                         }
 
-                        // If the cuisine does not exist, create a new entry
+                        // If the game does not exist, create a new entry
 
                             Map<String, Object> newGame = new HashMap<>();
                             newGame.put("game", game);
                             newGame.put("votes", 1); // Initialize with count 1
                             games.add(newGame);
 
-
-
-
-                        // Update the event with the new cuisine data
+                        // Update the event with the new gamevotes data
                         event.put("game_votes", games);
 
                         // Update Firestore
@@ -280,6 +284,156 @@ public class Database {
         }).addOnFailureListener(e -> Log.e(TAG, "Error fetching group", e));
     }
 
+    /**
+     * 8. Add NightVotes
+     */
+
+    public void updateNightVotes(String groupName, String eventId, String gastgeber, String essen,String allgemein,String kommentar,int sterne) {
+        DocumentReference groupRef = db.collection(COLLECTION_NAME).document(groupName);
+
+        groupRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                List<Map<String, Object>> events = (List<Map<String, Object>>) documentSnapshot.get("events");
+
+                // Iterate through events and find the correct event
+                for (Map<String, Object> event : events) {
+                    if (event.get("event_id").equals(eventId)) {
+                        List<Map<String, Object>> nightVotes = (List<Map<String, Object>>) event.get("nightVotes");
+
+                        // If the nightVotes list is null, initialize it as an empty list
+                        if (nightVotes == null) {
+                            nightVotes = new ArrayList<>();
+                        }
+
+                        // Check if the selected nightVote already exists in the list
+                        boolean nightVoteFound = false;
+                        for (Map<String, Object> nightVote : nightVotes) {
+                            if (nightVote.get("gastgeber").equals(gastgeber)) {
+                                nightVoteFound = true;
+                                break;
+                            }
+                        }
+
+                        // If the nightVote does not exist, create a new entry
+                        if (!nightVoteFound) {
+                            Map<String, Object> newNightVote = new HashMap<>();
+                            newNightVote.put("gastgeber", gastgeber);
+                            newNightVote.put("essen", essen);
+                            newNightVote.put("abendallgemein", allgemein);
+                            newNightVote.put("kommentar", kommentar);
+                            newNightVote.put("starCount", sterne);
+                            nightVotes.add(newNightVote);
+                        }
+
+                        // Update the event with the new cuisine data
+                        event.put("nightVotes", nightVotes);
+
+                        // Update Firestore
+                        groupRef.update("events", events)
+                                .addOnSuccessListener(aVoid -> Log.d(TAG, "Cuisine count updated successfully"))
+                                .addOnFailureListener(e -> Log.e(TAG, "Error updating cuisine count", e));
+
+
+                        break; // Exit loop after updating the event
+                    }
+                }
+            } else {
+                Log.e(TAG, "Group not found");
+            }
+        }).addOnFailureListener(e -> Log.e(TAG, "Error fetching group", e));
+
+    }
+
+    public void getDateAndHost(String groupName, DateAndHostCallback callback) {
+        DocumentReference groupRef = db.collection(COLLECTION_NAME).document(groupName);
+        groupRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                List<Map<String, Object>> events = (List<Map<String, Object>>) documentSnapshot.get("events");
+                ArrayList<String> dateAndHost = new ArrayList<>();
+                Date letztesDatum = null;
+                Date heute = Calendar.getInstance().getTime();
+
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+                    for (Map<String, Object> event : events) {
+                        String dateString = event.get("date").toString();
+                        Date datum = sdf.parse(dateString);
+                        Log.i(TAG, "onDocumentReceived: " + event.get("date"));
+
+                        if (datum.before(heute)) {
+                            if (letztesDatum == null || datum.after(letztesDatum)) {
+                                letztesDatum = datum;
+                                dateAndHost.add((String) event.get("host"));
+                                dateAndHost.add((String) event.get("date"));
+
+
+                            }
+                        }
+                    }
+                    callback.onDateAndHostReceived(dateAndHost); // Callback aufrufen
+                } catch (ParseException e) {
+                    Log.e(TAG, "ParseException: " + e.getMessage());
+                    callback.onError(e);
+                }
+
+            } else {
+                Log.e(TAG, "Group not found");
+                callback.onError(new Exception("Group not found"));
+            }
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Error fetching group", e);
+            callback.onError(e);
+        });
+    }
+
+    public void getNextDateAndHost(String groupName, DateAndHostCallback callback) {
+        DocumentReference groupRef = db.collection(COLLECTION_NAME).document(groupName);
+        groupRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                List<Map<String, Object>> events = (List<Map<String, Object>>) documentSnapshot.get("events");
+                ArrayList<String> dateAndHost = new ArrayList<>();
+                Date naechstesDatum = null;
+                Date heute = Calendar.getInstance().getTime();
+
+                Date tommorow = null;
+
+                Date today = Calendar.getInstance().getTime();
+
+                try {
+                    SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+
+                    for (Map<String, Object> event : events) {
+                        String dateString = event.get("date").toString();
+                        Date datum = sdf.parse(dateString);
+                        Log.i(TAG, "onDocumentReceived: " + event.get("date"));
+
+                        if (datum.after(today)) {
+                            if (tommorow == null || datum.before(tommorow)) {
+                                tommorow = datum;
+                                dateAndHost.add((String) event.get("host"));
+                                dateAndHost.add((String) event.get("date"));
+                            }
+                        }
+                    }
+                } catch (ParseException e) {
+                    Log.e(TAG, "ParseException: " + e.getMessage());
+
+                }
+                callback.onDateAndHostReceived(dateAndHost); // Callback aufrufen
+
+            } else {
+                Log.e(TAG, "Group not found");
+                callback.onError(new Exception("Group not found"));
+            }
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Error fetching group", e);
+            callback.onError(e);
+        });
+    }
+
+
+
     public interface OnDocumentReceivedListener {
         void onDocumentReceived(DocumentSnapshot document);
         void onError(Exception e);
@@ -291,6 +445,11 @@ public class Database {
     public interface FirestoreCallback {
         void onSuccess(Long nextHostIndex);
         void onFailure(String errorMessage);
+    }
+
+    public interface DateAndHostCallback {
+        void onDateAndHostReceived(ArrayList<String> dateAndHost);
+        void onError(Exception e);
     }
 
 }

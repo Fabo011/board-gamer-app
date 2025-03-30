@@ -17,7 +17,7 @@
 
     <item
         android:id="@+id/navigation_notifications"
-        android:icon="@drawable/done"
-        android:title="Benachrichtigungen" />
+        android:icon="@drawable/star"
+        android:title="Bewertung" />
 
 </menu>

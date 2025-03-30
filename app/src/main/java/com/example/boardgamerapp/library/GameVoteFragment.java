@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.example.boardgamerapp.R;
 import com.example.boardgamerapp.database.Database;
@@ -27,10 +28,12 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -39,19 +42,53 @@ public class GameVoteFragment extends Fragment {
     Button addButton;
     EditText editTextGameName;
     EditText editTextBeschreibung;
+
+    TextView titel, subtitel;
     String eventid;
     String groupName;
     String spielname;
+    String host,date;
+
     Database database = new Database();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+        Store store = new Store(getContext());
         View view = inflater.inflate(R.layout.fragment_game_vote, container, false);
         addButton = view.findViewById(R.id.submitGameSuggestionButton);
         editTextGameName = view.findViewById(R.id.gameNameEditText);
         editTextBeschreibung = view.findViewById(R.id.gameDescriptionEditText);
+        titel = view.findViewById(R.id.TitleTextView);
+        subtitel = view.findViewById(R.id.SubtitleTextView);
+        groupName = store.getGroupName();
+
+        database.getNextDateAndHost(groupName, new Database.DateAndHostCallback() {
+
+    @Override
+    public void onDateAndHostReceived(ArrayList<String> dateAndHost) {
+                host = dateAndHost.get(0);
+                date = dateAndHost.get(1);
+        SimpleDateFormat inputFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.GERMAN);
+        SimpleDateFormat outputFormat = new SimpleDateFormat("dd. MMMM yyyy", Locale.GERMAN);
+        String dateString = date;
+        Date date = null;
+        try {
+            date = inputFormat.parse(dateString);
+            String outputString = outputFormat.format(date);
+            titel.setText("Event: " + outputString);
+            subtitel.setText("Gastgeber: " + host);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    @Override
+    public void onError(Exception e) {
+
+    }
+});
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override

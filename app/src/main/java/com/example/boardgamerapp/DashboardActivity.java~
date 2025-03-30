@@ -22,6 +22,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.boardgamerapp.library.GameVoteFragment;
 import com.example.boardgamerapp.library.UserStory1NextMatchDay;
 import com.example.boardgamerapp.library.UserStory4PreVoting;
+import com.example.boardgamerapp.library.UserStory5NightVote;
 import com.example.boardgamerapp.library.UserStoryOptional;
 import com.example.boardgamerapp.store.Store;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -69,13 +70,16 @@ public class DashboardActivity extends AppCompatActivity {
                 showActivityContent();
                 return true;
             } else if (item.getItemId() == R.id.navigation_dashboard) {
-                hideActivityContent(); // Activity Content ausblenden
-                Fragment fragment = new GameVoteFragment();
-                loadFragment(fragment);
+                hideActivityContent();
+                loadFragment(new GameVoteFragment());
                 return true;
             } else if (item.getItemId() == R.id.navigation_date) {
                 hideActivityContent();
                 loadFragment(new AddEventFragment());
+                return true;
+            } else if (item.getItemId() == R.id.navigation_notifications {
+                hideActivityContent();
+                loadFragment(new UserStory5NightVote());
                 return true;
             }
             return false;
@@ -173,9 +177,12 @@ public class DashboardActivity extends AppCompatActivity {
         // Set up button click listeners
         //createEventButton.setOnClickListener(v -> startActivity(new Intent(DashboardActivity.this, AddEventActivity.class)));
         //messagingButton.setOnClickListener(v -> startActivity(new Intent(DashboardActivity.this, MessagingActivity.class)));
-        sendMessage.setOnClickListener(v ->
-                hideActivityContent()
-                loadFragment(new MessagingFragment()));
+        sendMessage.setOnClickListener(v -> {
+                    hideActivityContent();
+                    loadFragment(new MessagingFragment());
+                });
+
+
     }
 
     private void displayGameVoteButtons(List<Map<String, Object>> gameVotes, String eventId) {
