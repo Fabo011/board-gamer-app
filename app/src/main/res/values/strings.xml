@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">boardgamerapp</string>
+    <string name="app_name">GameNights</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
@@ -19,4 +19,21 @@
     <string name="submit">Senden</string>
     <string name="cuisine_reminder">Bitte wählt eure Lieblingsessensrichtung für das nächste Event.</string>
     <string name="cuisine_reminder_1">An die</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="game_suggestions">Spielvorschlag</string>
+    <string name="game_name">Spielname</string>
+    <string name="min_players">min Spieler</string>
+    <string name="max_players">max Spieler</string>
+    <string name="game_description">Spielbeschreibung</string>
+    <string name="suggest_game">Spielvorschlag</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+        <string-array name="cuisiene_categories">
+            <item>Bitte wählen...</item>
+            <item>Italian</item>
+            <item>Österreichisch</item>
+            <item>Asiatisch</item>
+            <item>Amerikanisch</item>
+        </string-array>
+
 </resources>

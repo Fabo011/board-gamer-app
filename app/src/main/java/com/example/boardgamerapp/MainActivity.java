@@ -7,10 +7,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Switch;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.splashscreen.SplashScreen;
 
 import com.example.boardgamerapp.library.MainActivityLibrary;
 import com.example.boardgamerapp.store.Store;
 import com.example.boardgamerapp.messaging.MessagingService;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
