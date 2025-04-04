@@ -26,6 +26,13 @@
     <string name="max_players">max Spieler</string>
     <string name="game_description">Spielbeschreibung</string>
     <string name="suggest_game">Spielvorschlag</string>
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+        <string-array name="cuisiene_categories">
+            <item>Italian</item>
+            <item>Österreichisch</item>
+            <item>Asiatisch</item>
+            <item>Amerikanisch</item>
+        </string-array>
+
 </resources>

@@ -2,10 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primaryColor">#170048</color>
+    <color name="primaryColor">#FFF</color>
     <color name="secundaryColor">#10002F</color>
     <color name="primaryButtonColor">#F050F8</color>
     <color name="textColor">#FFFFFF</color>
-    <color name="testRippleColor">#CC00FF00</color>
 
 </resources>

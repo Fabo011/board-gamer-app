@@ -14,6 +14,7 @@ import com.example.boardgamerapp.database.Database;
 
 public class UserStoryOptional {
 
+
     public static Spinner createCuisineDropdown(Context context, String groupName, String eventId) {
         Spinner cuisineDropdown = new Spinner(context);
 
